@@ -7,6 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
   let audio = null;
   let isMusicPlaying = false;
   let appConfig = null;
+  let firstAudioGesture = false; // Shared flag: prevents double-play between autoplay & manual triggers
 
   // Initialize Application
   initApp();
@@ -209,11 +210,27 @@ document.addEventListener('DOMContentLoaded', () => {
       });
     }
 
-    // "Restart" button on Outro page
+    // "Restart" button on Outro page — page-by-page flipping animation back to cover
     const btnRestart = document.getElementById('btn-restart');
     if (btnRestart) {
       btnRestart.addEventListener('click', () => {
-        if (pageFlip) pageFlip.flip(0); // Flip back to Cover
+        if (!pageFlip) return;
+        
+        // Disable the button temporary to prevent double-clicks
+        btnRestart.style.pointerEvents = 'none';
+        btnRestart.style.opacity = '0.5';
+
+        const flipBackInterval = setInterval(() => {
+          const currentIndex = pageFlip.getCurrentPageIndex();
+          if (currentIndex <= 0) {
+            clearInterval(flipBackInterval);
+            btnRestart.style.pointerEvents = 'auto';
+            btnRestart.style.opacity = '1';
+            updatePageIndicator(1, pageFlip.getPageCount());
+          } else {
+            pageFlip.flipPrev();
+          }
+        }, 500); // 500ms interval for smooth page-by-page flipping
       });
     }
 
@@ -288,22 +305,24 @@ document.addEventListener('DOMContentLoaded', () => {
     audio = new Audio(musicUrl);
     audio.loop = true;
     audio.volume = 0.55;
-    // Preload so it's ready immediately on first interaction
     audio.preload = 'auto';
+
+    // Track whether a gesture already triggered the first play
+    // so btn-open-book and autoplay don't race each other
+    let firstGestureStarted = false;
 
     // Log errors if audio file fails to load
     audio.addEventListener('error', (e) => {
-      console.error('Audio load error details:', e);
-      console.error('Failed to load audio from source URL:', audio.src);
+      console.error('Audio load error. URL:', audio.src, e);
     });
 
     const audioBtn = document.getElementById('audio-control');
 
+    // Button click — explicit toggle
     if (audioBtn) {
       audioBtn.addEventListener('click', (e) => {
-        // Prevent click event from bubbling up to document listener
         e.stopPropagation();
-        // Remove autoplay-pending state when user explicitly interacts
+        firstAudioGesture = true;
         audioBtn.classList.remove('autoplay-pending');
         if (isMusicPlaying) {
           pauseAudio();
@@ -313,32 +332,56 @@ document.addEventListener('DOMContentLoaded', () => {
       });
     }
 
-    // --- Attempt immediate autoplay (works if browser allows it) ---
-    audio.play().then(() => {
-      // Autoplay succeeded — update UI to "playing"
-      isMusicPlaying = true;
-      if (audioBtn) audioBtn.classList.add('playing');
-      const audioIcon = document.getElementById('audio-icon');
-      if (audioIcon) audioIcon.className = 'ph-light ph-speaker-high';
-    }).catch(() => {
-      // Autoplay blocked by browser policy — show a pulse hint on the button
-      // and start on the first user gesture anywhere on the page
-      if (audioBtn) audioBtn.classList.add('autoplay-pending');
-      
-      const enableAudioOnFirstGesture = () => {
-        startAudio();
-        if (audioBtn) audioBtn.classList.remove('autoplay-pending');
-        document.removeEventListener('click', enableAudioOnFirstGesture);
-        document.removeEventListener('touchstart', enableAudioOnFirstGesture);
+    // Attempt autoplay once the file is ready to play through
+    const tryAutoplay = () => {
+      if (firstAudioGesture) return; // User already triggered manually
+      audio.play().then(() => {
+        firstAudioGesture = true;
+        isMusicPlaying = true;
+        if (audioBtn) audioBtn.classList.add('playing');
+        const audioIcon = document.getElementById('audio-icon');
+        if (audioIcon) audioIcon.className = 'ph-light ph-speaker-high';
+      }).catch(() => {
+        // Browser blocked autoplay — wait for first user gesture
+        if (audioBtn) audioBtn.classList.add('autoplay-pending');
+
+        const onFirstGesture = () => {
+          if (firstAudioGesture) {
+            // Already handled (e.g. btn-open-book fired first)
+            document.removeEventListener('click', onFirstGesture);
+            document.removeEventListener('touchstart', onFirstGesture);
+            return;
+          }
+          firstAudioGesture = true;
+          if (audioBtn) audioBtn.classList.remove('autoplay-pending');
+          startAudio();
+          document.removeEventListener('click', onFirstGesture);
+          document.removeEventListener('touchstart', onFirstGesture);
+        };
+        document.addEventListener('click', onFirstGesture);
+        document.addEventListener('touchstart', onFirstGesture, { passive: true });
+      });
+    };
+
+    // Wait until audio can play before attempting — prevents AbortError
+    if (audio.readyState >= 3) {
+      tryAutoplay();
+    } else {
+      audio.addEventListener('canplaythrough', tryAutoplay, { once: true });
+      // Fallback: try on first user interaction in case canplaythrough fires late
+      const fallbackGesture = () => {
+        if (!firstAudioGesture) tryAutoplay();
+        document.removeEventListener('click', fallbackGesture);
+        document.removeEventListener('touchstart', fallbackGesture);
       };
-      document.addEventListener('click', enableAudioOnFirstGesture);
-      document.addEventListener('touchstart', enableAudioOnFirstGesture, { passive: true });
-    });
+      document.addEventListener('click', fallbackGesture);
+      document.addEventListener('touchstart', fallbackGesture, { passive: true });
+    }
   }
 
   function startAudio() {
     if (audio && !isMusicPlaying) {
-      // Toggle UI indicators immediately for instant visual response
+      firstAudioGesture = true; // Mark gesture handled
       isMusicPlaying = true;
       const audioBtn = document.getElementById('audio-control');
       const audioIcon = document.getElementById('audio-icon');
@@ -348,8 +391,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
       audio.play().catch(err => {
         console.warn('Audio play failed or was blocked by browser:', err);
-        // Revert UI indicators if actual playback fails
         isMusicPlaying = false;
+        firstAudioGesture = false; // Allow retry
         if (audioBtn) audioBtn.classList.remove('playing');
         if (audioIcon) audioIcon.className = 'ph-light ph-speaker-slash';
       });
