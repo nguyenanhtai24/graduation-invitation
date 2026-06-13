@@ -1,0 +1,22 @@
+{
+  "name": "NGUYỄN ANH TÀI",
+  "faculty": "Khoa Công Nghệ Thông Tin",
+  "major": "Công nghệ Thông Tin",
+  "university": "Trường Đại Học Sư Phạm Hà Nội",
+  "course": "K72 (2022 - 2026)",
+  "graduation_year": "2026",
+  "gpa_4": "3.73",
+  "gpa_10": "8.63",
+  "classification": "Xuất Sắc",
+  "total_credits": "126",
+  "event_time": "08:00 - Thứ Bảy, Ngày 27 Tháng 06 Năm 2026",
+  "event_location": "Hội trường lớn 11-10, Trường Đại học Sư phạm Hà Nội, 136 Xuân Thủy, Cầu Giấy, Hà Nội",
+  "dress_code": "Lịch sự - Trang trọng",
+  "music_url": "music/Yiruma  - River Flows in You.mp3",
+  "images": [
+    "images/image.png",
+    "images/image copy.png",
+    "images/image copy 2.png",
+    "images/image copy 3.png"
+  ]
+}

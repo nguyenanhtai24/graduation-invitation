@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description"
+    content="Thiệp mời tham dự Lễ tốt nghiệp cử nhân Công nghệ Thông tin - Nguyễn Anh Tài. Trân trọng kính mời gia đình, thầy cô và bạn bè.">
+  <title>Lễ Tốt Nghiệp - Nguyễn Anh Tài</title>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Poppins:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap"
+    rel="stylesheet">
+
+  <!-- Phosphor Icons (Light style) -->
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+  <!-- External Libraries CDN -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/page-flip@2.0.7/dist/js/page-flip.browser.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+  <!-- Main Stylesheet -->
+  <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
+  <!-- Three.js Canvas Backdrop -->
+  <canvas id="three-bg" aria-hidden="true"></canvas>
+
+  <!-- Floating Audio Controller -->
+  <button id="audio-control" class="audio-btn" aria-label="Bật/Tắt nhạc nền" title="Bật/Tắt nhạc nền">
+    <span class="music-waves">
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+    </span>
+    <i class="ph-light ph-speaker-slash" id="audio-icon"></i>
+  </button>
+
+  <!-- Main Book Container -->
+  <main class="book-container">
+    <!-- Overlay book shadow -->
+    <div class="book-shadow"></div>
+
+    <div id="book" class="book-viewport">
+
+      <!-- PAGE 1: BÌA TRƯỚC (COVER) -->
+      <div class="page page-cover" data-density="hard">
+        <div class="page-bezel-outer">
+          <div class="page-bezel-inner">
+            <div class="page-content">
+              <div class="cover-header">
+                <span class="academic-cap"><i class="ph-light ph-graduation-cap"></i></span>
+                <span class="eyebrow-tag" id="cover-eyebrow">TRÂN TRỌNG KÍNH MỜI</span>
+              </div>
+
+              <div class="cover-title-group">
+                <p class="sub-title" id="cover-title-label">LỄ TỐT NGHIỆP</p>
+                <h1 class="main-name" id="cover-name">NGUYỄN ANH TÀI</h1>
+                <div class="gold-divider"></div>
+                <p class="student-subtitle" id="cover-subtitle">Cử nhân Công Nghệ Thông Tin</p>
+                <p class="course-label" id="cover-course">Khóa 72 (2022 - 2026)</p>
+              </div>
+
+              <div class="cover-footer">
+                <p class="university-name" id="cover-university">Trường Đại Học Sư Phạm Hà Nội</p>
+                <button id="btn-open-book" class="btn-gold" aria-label="Mở thiệp mời">
+                  <span>MỞ THIỆP MỜI</span>
+                  <div class="btn-icon-circle"><i class="ph-light ph-arrow-right"></i></div>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PAGE 2: LỜI TRI ÂN -->
+      <div class="page page-text" data-density="soft">
+        <div class="page-bezel-outer">
+          <div class="page-bezel-inner">
+            <div class="page-content">
+              <h2 class="page-title" id="tri-an-title">Lời Tri Ân</h2>
+              <div class="gold-divider-left"></div>
+
+              <div class="story-content">
+                <p class="quote-text" id="tri-an-quote">
+                  "Mỗi thành quả đều được tạo nên từ sự nỗ lực, lòng biết ơn và những người luôn đồng hành phía sau."
+                </p>
+                <div class="story-paragraphs" id="tri-an-content">
+                  <!-- Loaded dynamically from config/upgrade -->
+                  <p class="main-paragraphs">Bốn năm đại học là hành trình của những bài học, những trải nghiệm và những
+                    lần vượt qua giới hạn của bản thân.</p>
+                  <p class="main-paragraphs">Từ những ngày đầu bước chân vào giảng đường Trường Đại Học Sư Phạm Hà Nội,
+                    đến hôm nay khi chuẩn bị nhận tấm bằng Cử nhân Công Nghệ Thông Tin, tôi hiểu rằng thành công này
+                    không chỉ thuộc về riêng mình.</p>
+                  <p class="main-paragraphs">Xin gửi lời cảm ơn sâu sắc tới gia đình, quý thầy cô Khoa Công Nghệ Thông
+                    Tin, và những người bạn đã luôn động viên, đồng hành và truyền cảm hứng trong suốt chặng đường vừa
+                    qua.</p>
+                </div>
+              </div>
+
+              <div class="page-footer">
+                <span class="page-num-left">Trang 2</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PAGE 3: HÀNH TRÌNH 2022 - 2026 -->
+      <div class="page page-text" data-density="soft">
+        <div class="page-bezel-outer">
+          <div class="page-bezel-inner">
+            <div class="page-content">
+              <h2 class="page-title" id="timeline-title">Hành Trình</h2>
+              <span class="page-subtitle" id="timeline-subtitle">2022 - 2026</span>
+              <div class="gold-divider-left"></div>
+
+              <div class="timeline-container">
+                <div class="timeline-line"></div>
+
+                <div class="timeline-item" data-year="2022">
+                  <div class="timeline-dot"></div>
+                  <div class="timeline-body">
+                    <h3>2022</h3>
+                    <p>Bắt đầu hành trình sinh viên tại Trường Đại Học Sư Phạm Hà Nội.</p>
+                  </div>
+                </div>
+
+                <div class="timeline-item" data-year="2023">
+                  <div class="timeline-dot"></div>
+                  <div class="timeline-body">
+                    <h3>2023</h3>
+                    <p>Khám phá thế giới lập trình, cơ sở dữ liệu và phát triển phần mềm.</p>
+                  </div>
+                </div>
+
+                <div class="timeline-item" data-year="2024">
+                  <div class="timeline-dot"></div>
+                  <div class="timeline-body">
+                    <h3>2024</h3>
+                    <p>Tiếp cận chuyên sâu: Web Development, DSA, Software Engineering.</p>
+                  </div>
+                </div>
+
+                <div class="timeline-item" data-year="2025">
+                  <div class="timeline-dot"></div>
+                  <div class="timeline-body">
+                    <h3>2025</h3>
+                    <p>Nghiên cứu AI, Phân tích thiết kế hệ thống, An toàn thông tin & Web.</p>
+                  </div>
+                </div>
+
+                <div class="timeline-item" data-year="2026">
+                  <div class="timeline-dot"></div>
+                  <div class="timeline-body">
+                    <h3>2026</h3>
+                    <p>Hoàn thành Khóa luận tốt nghiệp, đạt loại Xuất Sắc ngành CNTT.</p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="page-footer">
+                <span class="page-num-right">Trang 3</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PAGE 4: DẤU ẤN SINH VIÊN (STATS) -->
+      <div class="page page-text" data-density="soft">
+        <div class="page-bezel-outer">
+          <div class="page-bezel-inner">
+            <div class="page-content">
+              <h2 class="page-title" id="stats-title">Dấu Ấn Sinh Viên</h2>
+              <div class="gold-divider-left"></div>
+
+              <div class="stats-container">
+                <div class="stats-grid">
+                  <div class="stat-card">
+                    <span class="stat-icon"><i class="ph-light ph-graduation-cap"></i></span>
+                    <div class="stat-info">
+                      <h4>Hệ đào tạo</h4>
+                      <p>Chính quy</p>
+                    </div>
+                  </div>
+
+                  <div class="stat-card">
+                    <span class="stat-icon"><i class="ph-light ph-book-open"></i></span>
+                    <div class="stat-info">
+                      <h4>Số tín chỉ</h4>
+                      <p id="stat-credits">126 tín chỉ</p>
+                    </div>
+                  </div>
+
+                  <div class="stat-card">
+                    <span class="stat-icon"><i class="ph-light ph-chart-line-up"></i></span>
+                    <div class="stat-info">
+                      <h4>GPA hệ 4</h4>
+                      <p id="stat-gpa4">3.73 / 4.00</p>
+                    </div>
+                  </div>
+
+                  <div class="stat-card">
+                    <span class="stat-icon"><i class="ph-light ph-star"></i></span>
+                    <div class="stat-info">
+                      <h4>GPA hệ 10</h4>
+                      <p id="stat-gpa10">8.63 / 10.0</p>
+                    </div>
+                  </div>
+
+                  <div class="stat-card full-width">
+                    <span class="stat-icon-img"><img src="images/excellent_badge.png" alt="Huy hiệu Xuất sắc"></span>
+                    <div class="stat-info">
+                      <h4>Xếp loại tốt nghiệp</h4>
+                      <p class="gold-text" id="stat-classification">Xuất Sắc</p>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="stats-quote-box">
+                  <p class="stats-quote" id="stats-quote-text">
+                    "Không phải đích đến làm nên giá trị của hành trình, mà chính những nỗ lực trên từng bước đi."
+                  </p>
+                </div>
+              </div>
+
+              <div class="page-footer">
+                <span class="page-num-left">Trang 4</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PAGE 5: THIỆP MỜI (INVITATION) -->
+      <div class="page page-text" data-density="soft">
+        <div class="page-bezel-outer">
+          <div class="page-bezel-inner">
+            <div class="page-content">
+              <h2 class="page-title text-center" id="invite-page-title">Trân Trọng Kính Mời</h2>
+              <div class="gold-divider-center"></div>
+
+              <div class="invitation-body text-center">
+                <p class="invite-target">Kính mời Quý Thầy Cô, Gia Đình và Bạn Bè</p>
+                <p class="invite-reason">đến tham dự Lễ Tốt Nghiệp của</p>
+
+                <h3 class="invitee-name" id="invite-name">NGUYỄN ANH TÀI</h3>
+                <p class="invitee-deg">Cử nhân Công Nghệ Thông Tin</p>
+                <p class="invitee-uni">Trường Đại Học Sư Phạm Hà Nội</p>
+
+                <div class="invitation-details">
+                  <div class="detail-row">
+                    <i class="ph-light ph-calendar"></i>
+                    <div>
+                      <strong>Thời gian</strong>
+                      <p id="invite-time">08:00 - Thứ Ba, Ngày 30 Tháng 06 Năm 2026</p>
+                    </div>
+                  </div>
+
+                  <div class="detail-row">
+                    <i class="ph-light ph-map-pin"></i>
+                    <div>
+                      <strong>Địa điểm</strong>
+                      <p id="invite-location">Hội trường lớn 11-10, Trường Đại học Sư phạm Hà Nội, 136 Xuân Thủy, Cầu
+                        Giấy, Hà Nội</p>
+                    </div>
+                  </div>
+
+                  <div class="detail-row">
+                    <i class="ph-light ph-coat-hanger"></i>
+                    <div>
+                      <strong>Dress Code</strong>
+                      <p id="invite-dress">Lịch sự - Trang trọng</p>
+                    </div>
+                  </div>
+                </div>
+
+                <button id="btn-add-calendar" class="btn-outline-gold" aria-label="Thêm sự kiện vào lịch">
+                  <i class="ph-light ph-calendar-plus"></i>
+                  <span>THÊM VÀO LỊCH (ICS)</span>
+                </button>
+              </div>
+
+              <div class="page-footer">
+                <span class="page-num-left">Trang 5</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PAGE 6: GALLERY -->
+      <div class="page page-gallery" data-density="soft">
+        <div class="page-bezel-outer">
+          <div class="page-bezel-inner">
+            <div class="page-content">
+              <h2 class="page-title">Khoảnh Khắc</h2>
+              <span class="page-subtitle">Đáng Nhớ</span>
+              <div class="gold-divider-left"></div>
+
+              <!-- Mobile swipe hint -->
+              <div class="gallery-scroll-hint" aria-hidden="true">
+                <i class="ph-light ph-arrows-left-right"></i>
+                <span>Vuốt để xem ảnh</span>
+              </div>
+
+              <div class="gallery-grid" id="gallery-container">
+                <!-- Loaded dynamically -->
+                <div class="gallery-item-skeleton"></div>
+              </div>
+
+              <div class="page-footer">
+                <span class="page-num-right">Trang 6</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PAGE 7: LỜI KẾT (THANK YOU) -->
+      <div class="page page-text" data-density="soft">
+        <div class="page-bezel-outer">
+          <div class="page-bezel-inner">
+            <div class="page-content">
+              <div class="outro-main-content">
+                <span class="outro-crest"><i class="ph-light ph-shield-star"></i></span>
+
+                <h2 class="thank-you-title" id="outro-title">Thank You</h2>
+                <div class="gold-divider-center"></div>
+
+                <p class="outro-quote" id="outro-quote">"Every accomplishment starts with the decision to try."</p>
+
+                <div class="outro-message-box" id="outro-message">
+                  <p>Xin chân thành cảm ơn vì đã đồng hành cùng tôi trong một cột mốc quan trọng của cuộc đời.</p>
+                  <p>Hẹn gặp Quý vị trong ngày lễ tốt nghiệp.</p>
+                </div>
+
+                <div class="outro-signature-group">
+                  <p class="outro-signature" id="outro-signature">Nguyễn Anh Tài</p>
+                  <p class="outro-deg">Bachelor of Information Technology</p>
+                  <p class="outro-class">Class of 2026</p>
+                </div>
+              </div>
+
+              <div class="page-footer">
+                <span class="page-num-left">Trang 7</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PAGE 8: BÌA SAU (BACK COVER) -->
+      <div class="page page-cover" data-density="hard">
+        <div class="page-bezel-outer">
+          <div class="page-bezel-inner">
+            <div class="page-content back-cover-content">
+              <div class="back-cover-crest">
+                <div class="crest-outer">
+                  <div class="crest-inner">
+                    <i class="ph-light ph-graduation-cap"></i>
+                  </div>
+                </div>
+              </div>
+
+              <div class="back-cover-info text-center">
+                <h3>NGUYỄN ANH TÀI</h3>
+                <p class="back-year">2026</p>
+                <div class="gold-divider"></div>
+                <p class="back-uni">Trường Đại Học Sư Phạm Hà Nội</p>
+              </div>
+
+              <div class="back-cover-footer text-center">
+                <button id="btn-restart" class="btn-gold" aria-label="Xem lại thiệp mời từ đầu">
+                  <span>XEM LẠI TỪ ĐẦU</span>
+                  <div class="btn-icon-circle"><i class="ph-light ph-arrow-counter-clockwise"></i></div>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Page Navigation Arrows (Floating, Desktop only) -->
+  <div class="page-navigation-controls" aria-label="Điều khiển lật trang">
+    <button id="btn-prev" class="nav-arrow-btn prev" aria-label="Trang trước" title="Trang trước">
+      <i class="ph-light ph-caret-left"></i>
+    </button>
+    <button id="btn-next" class="nav-arrow-btn next" aria-label="Trang sau" title="Trang sau">
+      <i class="ph-light ph-caret-right"></i>
+    </button>
+  </div>
+
+  <!-- Bottom Page indicator -->
+  <div id="page-indicator" class="page-indicator" aria-live="polite">
+    Trang 1 / 8
+  </div>
+
+  <!-- Lightbox for Gallery Images -->
+  <div id="lightbox" class="lightbox" aria-hidden="true" role="dialog" aria-label="Phóng to ảnh">
+    <button class="lightbox-close" aria-label="Đóng hình ảnh"><i class="ph-light ph-x"></i></button>
+    <img id="lightbox-img" class="lightbox-img" src="" alt="Ảnh phóng to">
+  </div>
+
+  <!-- Scripts -->
+  <script src="js/three-scene.js"></script>
+  <script src="js/main.js"></script>
+</body>
+
+</html>
